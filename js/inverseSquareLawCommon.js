@@ -1,15 +1,11 @@
-// Copyright 2017-2019, University of Colorado Boulder
+// Copyright 2017-2020, University of Colorado Boulder
 
 /**
  * Creates the namespace for all things under inverse-square-law-common.
  *
  * @author Jesse Greenberg (PhET Interactive Simulations)
  */
-define( require => {
-  'use strict';
 
-  // modules
-  const Namespace = require( 'PHET_CORE/Namespace' );
+import Namespace from '../../phet-core/js/Namespace.js';
 
-  return new Namespace( 'inverseSquareLawCommon' );
-} );
+export default new Namespace( 'inverseSquareLawCommon' );

@@ -1,4 +1,4 @@
-// Copyright 2017-2019, University of Colorado Boulder
+// Copyright 2017-2020, University of Colorado Boulder
 
 /**
  * Arrow buttons, slider and text box for editing the object value amount.
@@ -6,28 +6,25 @@
  * @author Jesse Greenberg (PhET Interactive Simulations)
  * @author Michael Barlow (PhET Interactive Simulations
  */
-define( require => {
-  'use strict';
 
-  // modules
-  const FocusHighlightPath = require( 'SCENERY/accessibility/FocusHighlightPath' );
-  const GroupFocusHighlightFromNode = require( 'SCENERY/accessibility/GroupFocusHighlightFromNode' );
-  const inherit = require( 'PHET_CORE/inherit' );
-  const inverseSquareLawCommon = require( 'INVERSE_SQUARE_LAW_COMMON/inverseSquareLawCommon' );
-  const merge = require( 'PHET_CORE/merge' );
-  const NumberControl = require( 'SCENERY_PHET/NumberControl' );
-  const Panel = require( 'SUN/Panel' );
-  const PhetFont = require( 'SCENERY_PHET/PhetFont' );
-  const StringUtils = require( 'PHETCOMMON/util/StringUtils' );
-  const Tandem = require( 'TANDEM/Tandem' );
-  const Text = require( 'SCENERY/nodes/Text' );
+import merge from '../../../phet-core/js/merge.js';
+import StringUtils from '../../../phetcommon/js/util/StringUtils.js';
+import NumberControl from '../../../scenery-phet/js/NumberControl.js';
+import PhetFont from '../../../scenery-phet/js/PhetFont.js';
+import GroupFocusHighlightFromNode from '../../../scenery/js/accessibility/GroupFocusHighlightFromNode.js';
+import Text from '../../../scenery/js/nodes/Text.js';
+import Tandem from '../../../tandem/js/Tandem.js';
+import inverseSquareLawCommonStrings from '../inverse-square-law-common-strings.js';
+import inverseSquareLawCommon from '../inverseSquareLawCommon.js';
+import ISLCPanel from './ISLCPanel.js';
 
-  // strings
-  const pattern0Value1UnitsString = require( 'string!INVERSE_SQUARE_LAW_COMMON/pattern_0value_1units' );
+const pattern0Value1UnitsString = inverseSquareLawCommonStrings.pattern_0value_1units;
 
-  // constants
-  const TITLE_MAX_WIDTH = 150; // max widths are set empirically to handle long strings
-  const VALUE_MAX_WIDTH = 110;
+// constants
+const TITLE_MAX_WIDTH = 150; // max widths are set empirically to handle long strings
+const VALUE_MAX_WIDTH = 110;
+
+class ISLCObjectControlPanel extends ISLCPanel {
 
   /**
    * @param {string} titleString
@@ -35,9 +32,8 @@ define( require => {
    * @param {Property.<number>} objectProperty
    * @param {Range} valueRange
    * @param {Object} [options]
-   * @constructor
    */
-  function ISLCObjectControlPanel( titleString, unitString, objectProperty, valueRange, options ) {
+  constructor( titleString, unitString, objectProperty, valueRange, options ) {
 
     options = merge( {
 
@@ -47,6 +43,7 @@ define( require => {
       yMargin: 4,
       resize: false,
       align: 'right',
+      minWidth: 100, // to offset parent minWidth
 
       numberControlOptions: null, // filled in below
 
@@ -121,10 +118,12 @@ define( require => {
     }
 
     // @protected
-    this.numberControl = new NumberControl( titleString, objectProperty, valueRange, numberControlOptions );
+    const numberControl = new NumberControl( titleString, objectProperty, valueRange, numberControlOptions );
 
     options = _.omit( options, [ 'numberControlOptions', 'tickLabelOptions' ] );
-    Panel.call( this, this.numberControl, options );
+    super( numberControl, options );
+
+    this.numberControl = numberControl;
 
     // a11y - it looks nicer if the entire panel has a group focus highlight rather than the NumberControl
     assert && assert( numberControlOptions.groupFocusHighlight === undefined, 'ISLCObjectControlPanel sets group focus highlight' );
@@ -134,13 +133,10 @@ define( require => {
     // NumberControl) has focus
     this.groupFocusHighlight = new GroupFocusHighlightFromNode( this, {
       useLocalBounds: true,
-      dilationCoefficient: 3.7,
-      outerStroke: FocusHighlightPath.OUTER_DARK_GROUP_FOCUS_COLOR,
-      innerStroke: FocusHighlightPath.INNER_DARK_GROUP_FOCUS_COLOR
+      dilationCoefficient: 3.7
     } );
   }
+}
 
-  inverseSquareLawCommon.register( 'ISLCObjectControlPanel', ISLCObjectControlPanel );
-
-  return inherit( Panel, ISLCObjectControlPanel );
-} );
+inverseSquareLawCommon.register( 'ISLCObjectControlPanel', ISLCObjectControlPanel );
+export default ISLCObjectControlPanel;
